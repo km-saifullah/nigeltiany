@@ -1,27 +1,45 @@
-<!DOCTYPE html>
-<html>
+ <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-          body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
-          button { font-size: 20px; padding: 10px; margin-top: 10px; }
-      </style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        button { font-size: 20px; padding: 10px; margin-top: 10px; }
+    </style>
 </head>
 <body>
-<h1>WebView Counter</h1>
-<p id="counter">0</p>
-<button onclick="incrementCounter()">Increment Counter</button>
-<script>
-          let counter = 0;
-          function updateCounter(value) {
-              counter = value;
-              document.getElementById('counter').innerText = counter;
-          }
-          function incrementCounter() {
-              counter++;
-              document.getElementById('counter').innerText = counter;
-              CounterChannel.postMessage(counter.toString()); // Send new value to Flutter
-          }
-      </script>
+    <h1>WebView Counter</h1>
+    <p id="counter">1</p>
+    <button onclick="incrementCounter()">Increment Counter</button>
+
+    <script>
+        let counter = 1; // Start from 1 to match initial display
+
+        // Define CounterChannel bridge (Ensure Flutter can call this)
+        window.CounterChannel = {
+            postMessage: function(value) {
+                console.log("Received from Flutter:", value);
+                updateCounter(parseInt(value)); // Update counter when Flutter sends data
+            }
+        };
+
+        function updateCounter(value) {
+            counter = value;
+            document.getElementById('counter').innerText = counter;
+        }
+
+        function incrementCounter() {
+            counter++;
+            document.getElementById('counter').innerText = counter;
+
+            // Send updated counter value to Flutter WebView
+            if (window.flutter_inappwebview) {
+                window.flutter_inappwebview.callHandler("CounterChannel", counter);
+            } else if (window.AndroidBridge) {
+                window.AndroidBridge.postMessage(counter.toString());
+            } else {
+                console.log("No WebView bridge found!");
+            }
+        }
+    </script>
 </body>
 </html>
