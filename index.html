@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,9 +8,9 @@
         button { font-size: 20px; padding: 10px; margin-top: 10px; }
     </style>
 </head>
-<body>
+<body cz-shortcut-listen="true">
     <h1>WebView Counter</h1>
-    <p id="counter">0</p>
+    <p id="counter">5</p>
     <button onclick="incrementCounter()">Increment Counter</button>
 
     <script>
@@ -28,9 +29,10 @@
             if (window.CounterChannel && window.CounterChannel.postMessage) {
                 window.CounterChannel.postMessage(counter.toString());
             } else {
-                console.warn("WebView JavaScript channel not found!");
+                console.warn("worked with warning");
             }
         }
     </script>
-</body>
-</html>
+
+
+</body></html>
