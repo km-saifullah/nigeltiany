@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -13,24 +13,22 @@
     <button onclick="incrementCounter()">Increment Counter</button>
 
     <script>
-        let counter = 5;  // Start from 5 to match initial display
+        let counter = 0;
 
-        // Function to update counter from Flutter
         function updateCounter(value) {
             counter = value;
             document.getElementById('counter').innerText = counter;
         }
 
-        // Function to send counter value to Flutter
         function incrementCounter() {
             counter++;
             document.getElementById('counter').innerText = counter;
 
-            // Send updated counter value to Flutter WebView
-            if (window.CounterChannel) {
-                window.CounterChannel.postMessage(counter.toString());  // Send to Flutter
+            // Check if WebView JavaScript channel exists before sending a message
+            if (window.CounterChannel && window.CounterChannel.postMessage) {
+                window.CounterChannel.postMessage(counter.toString());
             } else {
-                console.log("No WebView bridge found!");
+                console.warn("WebView JavaScript channel not found!");
             }
         }
     </script>
