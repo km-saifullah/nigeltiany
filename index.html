@@ -1,32 +1,45 @@
-
-   <!DOCTYPE html>
-   <html>
+<!DOCTYPE html>
+<html>
   <head>
-       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <style>
-          body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
-         button { font-size: 20px; padding: 10px; margin-top: 10px; }
-       </style>
-   </head>
-   <body>
-      <h1>WebView Counter</h1>
-      <p id="counter">0</p>
-      <button onclick="incrementCounter()">Increment Counter</button>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        padding: 20px;
+      }
+      button {
+        font-size: 20px;
+        padding: 10px;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>WebView Counter</h1>
+    <p id="counter">0</p>
+    <button id="btn">Increment Counter</button>
 
     <script>
-        let counter = 0;
-  
-    function updateCounter(value) {
-              counter = value;
-              document.getElementById('counter').innerText = counter;
-           }
-  
-           function incrementCounter() {
-              counter++;
-              document.getElementById('counter').innerText = counter;
-            CounterChannel.postMessage(counter.toString()); // Send new value to Flutter
-}
-      </script>
-</body>
-  </html>
+      let count = 0;
+
+      let counter = document.querySelector("#counter");
+      let btn = document.querySelector("#btn");
+
+      btn.addEventListener("click", updateCounter);
+      const updateCounter = () => {
+        count++;
+        counter.innerHTML = count;
+        if (
+          window.CounterChannel &&
+          typeof window.CounterChannel.postMessage === "function"
+        ) {
+          window.CounterChannel.postMessage(count);
+        } else {
+          console.warn("CounterChannel is not defined in the WebView.");
+        }
+      };
+    </script>
+  </body>
+</html>
 
