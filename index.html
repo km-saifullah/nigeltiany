@@ -29,7 +29,12 @@
       btn.addEventListener("click", () => {
         count++;
         counter.innerHTML = count;
-        CounterChannel.postMessage(counter.toString());
+        // Check if CounterChannel exists before calling it
+        if (window.CounterChannel && typeof window.CounterChannel.postMessage === "function") {
+          window.CounterChannel.postMessage(count.toString());
+        } else {
+          console.warn("CounterChannel is not defined.");
+        }
       });
     </script>
   </body>
