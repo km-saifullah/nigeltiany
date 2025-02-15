@@ -1,4 +1,5 @@
- <html>
+<!DOCTYPE html>
+<html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -8,34 +9,26 @@
 </head>
 <body>
     <h1>WebView Counter</h1>
-    <p id="counter">1</p>
+    <p id="counter">5</p>
     <button onclick="incrementCounter()">Increment Counter</button>
 
     <script>
-        let counter = 0; // Start from 1 to match initial display
+        let counter = 5;  // Start from 5 to match initial display
 
-        // Define CounterChannel bridge (Ensure Flutter can call this)
-        window.CounterChannel = {
-            postMessage: function(value) {
-                console.log("Received from Flutter:", value);
-                updateCounter(parseInt(value)); // Update counter when Flutter sends data
-            }
-        };
-
+        // Function to update counter from Flutter
         function updateCounter(value) {
             counter = value;
             document.getElementById('counter').innerText = counter;
         }
 
+        // Function to send counter value to Flutter
         function incrementCounter() {
             counter++;
             document.getElementById('counter').innerText = counter;
 
             // Send updated counter value to Flutter WebView
-            if (window.flutter_inappwebview) {
-                window.flutter_inappwebview.callHandler("CounterChannel", counter);
-            } else if (window.AndroidBridge) {
-                window.AndroidBridge.postMessage(counter.toString());
+            if (window.CounterChannel) {
+                window.CounterChannel.postMessage(counter.toString());  // Send to Flutter
             } else {
                 console.log("No WebView bridge found!");
             }
